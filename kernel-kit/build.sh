@@ -183,7 +183,11 @@ fi
 if [ ! -f dist/sources/vanilla/aufs$aufs_version-$kernel_branch-git$today.tar.bz2 ]; then
 	echo "Downloading the Aufs sources"
 	if [ $aufs_version -eq 4 ];then
-		git clone https://github.com/sfjro/aufs4-standalone.git aufs${aufs_version}-$kernel_branch-git$today >> build.log 2>&1
+	git clone "$aufs_git" aufs${aufs_version}-$kernel_branch-git$today >> build.log 2>&1
+		if [ $? -ne 0 ]; then
+			echo "Error: failed to download the Aufs sources. Switching server."
+			git clone "$aufs_git1" aufs${aufs_version}-$kernel_branch-git$today >> build.log 2>&1
+		fi
 	else
 		git clone $aufs_git/aufs3-standalone aufs${aufs_version}-$kernel_branch-git$today >> build.log 2>&1
 	fi
